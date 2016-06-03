@@ -13,14 +13,16 @@ else{
     $loggedUser->loadFromDB($conn, $_SESSION['loggedUserId']);
 }
 
-
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(trim($_POST['newTweet'])) >0 && strlen(trim($_POST['newTweet'])) <=140){
     $tweetToAdd = new Tweet();
     $tweetToAdd->setUserId($loggedUser->getId());
     $tweetToAdd->setText($_POST['newTweet']);
-    $tweetToAdd->create($conn);
-    $tweetToAdd=null;
-    unset($_POST);
+    if($tweetToAdd->create($conn)){
+        echo ("<meta http-equiv='refresh' content='0'>");
+    }
+    else{
+        echo("Error during adding tweet");
+    }
 }
 ?>
 
@@ -33,6 +35,8 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(tr
         <?php
             $loggedUser->showUser();
             ?>
+            <br>
+            <a href="User_page.php?userId=<?php echo($loggedUser->getId()); ?>">Show your profile</a>
         </div>
         <br>
         <div>
@@ -53,15 +57,31 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(tr
                 }
                 else{
                     foreach($userTweets as $value){
-                        echo"<li>{$value->showTweet()}</li>";
+                        echo"<li>";
+                        $value->showTweet($conn);
+                        if($value->countComments($conn)===1){
+                            echo(" - 1 <a href='Tweet_page.php?tweetId={$value->getId()}'>comment</a>");
+                        }
+                        elseif($value->countComments($conn)>1){
+                            echo(" - ".$value->countComments($conn)." <a href='Tweet_page.php?tweetId={$value->getId()}'>comments</a>");
+                        }
+                        else{
+                            echo(" - 0 comments");
+                        }
+                        echo"</li>";
                     }
                 }
+                
                 ?>
             </ul>
         </div>
+        
         
         <a href="logout.php">Logout</a>
     </body>
 </html>
 
+<?php
+$conn->close();
+$conn=null;
 

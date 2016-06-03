@@ -14,6 +14,7 @@ class User {
         }
     }
     
+    
     public static function login(mysqli $conn, $email, $password){
         $sql="SELECT * FROM User WHERE email='{$email}'";
         $result=$conn->query($sql);
@@ -102,9 +103,10 @@ class User {
             $sql="UPDATE User SET 
                   email='{$this->email}',
                   fullName = '{$this->fullName}',
+                  password = '{$this->password}',    
                   active = '{$this->active}'
                   WHERE id={$this->id}";
-            if($conn->query($sq)) {
+            if($conn->query($sql)) {
                 return true;
             }
             else{
@@ -151,6 +153,61 @@ class User {
         echo $this->email. ' ' . $this->fullName;
     }
     
+    public function deleteUser(mysqli $conn){
+        $sql="DELETE FROM User WHERE id={$this->id}";
+        if($conn->query($sql)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public function countUnreadMessages(mysqli $conn){
+        $sql="SELECT COUNT(*) FROM Message WHERE recipient_id={$this->id} AND `read`=1";
+        $result= $conn->query($sql);
+        return intval($result->fetch_row()[0]);
+    }
+    
+    public function loadAllSentMessages(mysqli $conn){
+        $sql="SELECT * FROM Message WHERE sender_id={$this->id}";
+        $sendMessages = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $message=new Message();
+                $message->id =$row['id'];
+                $message->setSenderId($row['sender_id']);
+                $message->setRecipientId($row['recipient_id']);
+                $message->setText($row['text']);
+                $message->setRead($row['read']);
+                $message->setCreationDate($row['creation_date']);
+                $sentMessages[]=$message;
+            }
+            return $sentMessages;
+        }
+        return false;
+    }
+    
+    public function loadAllReceivedMessages(mysqli $conn){
+        $sql="SELECT * FROM Message WHERE recipient_id={$this->id}";
+        $receivedMessages = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $message=new Message();
+                $message->id =$row['id'];
+                $message->setSenderId($row['sender_id']);
+                $message->setRecipientId($row['recipient_id']);
+                $message->setText($row['text']);
+                $message->setRead($row['read']);
+                $message->setCreationDate($row['creation_date']);
+                $receivedMessages[]=$message;
+            }
+            return $receivedMessages;
+        }
+        return false;
+    }
     
 }
 

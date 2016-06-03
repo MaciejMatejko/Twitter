@@ -29,7 +29,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 
 
 
-
 ?>
 
 
@@ -61,3 +60,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         <a href="register.php">Registration</a>
     </body>
 </html>
+
+
+<?php
+$conn->close();
+$conn=null;

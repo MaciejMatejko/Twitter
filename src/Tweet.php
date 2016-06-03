@@ -3,8 +3,8 @@
 class Tweet {
     
     public $id;
-    public $user_id;
-    public $text;
+    private $user_id;
+    private $text;
     
     public function __construct(){
         $this->id=-1;
@@ -32,6 +32,14 @@ class Tweet {
     
     public function getText(){
         return $this->text;
+    }
+    
+    public function getAuthor(mysqli $conn){
+        $sql="SELECT User.email FROM User WHERE id='{$this->user_id}'";
+        $result=$conn->query($sql);
+        if($result->num_rows==1){
+            return $result->fetch_row()[0];
+        }
     }
     
     public function create(mysqli $conn){
@@ -82,12 +90,33 @@ class Tweet {
         }
     }
     
-    public function showTweet(){
-        echo '#'.$this->id. ' written by ' . $this->user_id . ': '.$this->text;
+    public function countComments(mysqli $conn){
+        $sql="SELECT COUNT(*) FROM Comment WHERE tweet_id={$this->id}";
+        $result= $conn->query($sql);
+        return intval($result->fetch_row()[0]);
     }
     
-    public function getAllComments(){
-        
+    public function showTweet(mysqli $conn){
+        echo "Tweet #<a href='Tweet_page.php?tweetId={$this->id}'>".$this->id. "</a> written by <a href='User_page.php?userId={$this->user_id}'>" . $this->getAuthor($conn) . "</a>: ".$this->text;
+    }
+    
+    public function loadAllComments(mysqli $conn){
+        $sql="SELECT * FROM Comment WHERE tweet_id={$this->id} ORDER BY creation_date DESC";
+        $tweetComments = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $comment=new Comment();
+                $comment->id =$row['id'];
+                $comment->setTweetId($row['tweet_id']);
+                $comment->setUserId($row['user_id']);
+                $comment->setText($row['text']);
+                $comment->setCreationDate($row['creation_date']);
+                $tweetComments[]=$comment;
+            }
+            return $tweetComments;
+        }
+        return false;
     }
 }
 

@@ -7,3 +7,4 @@ if(isset($_SESSION['loggedUserId'])){
 }
 
 header('Location: login.php');
+

@@ -26,6 +26,10 @@ if($_SERVER['REQUEST_METHOD']=== 'POST'){
         $newUser->activate();
         if($newUser->saveToDB($conn)) {
             echo 'Registration succssfull<br>';
+            if($loggedUserId=User::login($conn, $email, $password)){
+                $_SESSION['loggedUserId'] = $loggedUserId;
+                header("Location: index.php");
+            }
         }
         else{
             echo 'Error during the registration<br>';
@@ -86,3 +90,8 @@ if($_SERVER['REQUEST_METHOD']=== 'POST'){
         <a href="login.php">Login page</a>
     </body>
 </html>
+
+<?php 
+
+$conn->close();
+$conn=null;
