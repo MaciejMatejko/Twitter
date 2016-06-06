@@ -2,7 +2,25 @@
 
 class Tweet {
     
-    public $id;
+    public static function LoadAllUserTweets(mysqli $conn, $userId){
+        $sql="SELECT * FROM Tweet WHERE user_id = {$userId}";
+        $userTweets=[];
+        $result=$conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $tweet= new Tweet();
+                $tweet->id = $row['id'];
+                $tweet->setUserId($row['user_id']);
+                $tweet->setText($row['text']);
+                $userTweets[]=$tweet;
+            }
+            return $userTweets;
+        }
+        return false;
+    }
+
+
+    private $id;
     private $user_id;
     private $text;
     
@@ -49,16 +67,11 @@ class Tweet {
                 $this->id=$conn->insert_id;
                 return true;
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
     
-    public function Update(mysqli $conn){
+    public function update(mysqli $conn){
         if($this->id!==-1){
             $sql="UPDATE Tweet SET 
                   user_id='{$this->user_id}'
@@ -67,13 +80,8 @@ class Tweet {
             if($conn->query($sql)){
                 return true;
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
     
     public function loadTweetFromDB(mysqli $conn, $id){
@@ -82,11 +90,11 @@ class Tweet {
         if($result->num_rows==1){
             $rowUser=$result->fetch_assoc();
             $this->id = $rowUser['id'];
-            $this->user_id=$rowUser['user_id'];
-            $this->text=$rowUser['text'];
+            $this->setUserId($rowUser['user_id']);
+            $this->setText($rowUser['text']);
         }
         else{
-            return null;
+            return false;
         }
     }
     
@@ -100,23 +108,5 @@ class Tweet {
         echo "Tweet #<a href='Tweet_page.php?tweetId={$this->id}'>".$this->id. "</a> written by <a href='User_page.php?userId={$this->user_id}'>" . $this->getAuthor($conn) . "</a>: ".$this->text;
     }
     
-    public function loadAllComments(mysqli $conn){
-        $sql="SELECT * FROM Comment WHERE tweet_id={$this->id} ORDER BY creation_date DESC";
-        $tweetComments = [];
-        $result = $conn->query($sql);
-        if($result->num_rows>0){
-            while($row=$result->fetch_assoc()){
-                $comment=new Comment();
-                $comment->id =$row['id'];
-                $comment->setTweetId($row['tweet_id']);
-                $comment->setUserId($row['user_id']);
-                $comment->setText($row['text']);
-                $comment->setCreationDate($row['creation_date']);
-                $tweetComments[]=$comment;
-            }
-            return $tweetComments;
-        }
-        return false;
-    }
 }
 

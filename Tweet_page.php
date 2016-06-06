@@ -14,12 +14,14 @@ if(!isset($_SESSION['loggedUserId'])){
 $tweetId = isset($_GET['tweetId']) ? $_GET['tweetId'] : null;
 if($tweetId) {
 	$tweet = new Tweet();
-	$tweet->loadTweetFromDB($conn, $tweetId);
+	if(!$tweet->loadTweetFromDB($conn, $tweetId)){
+            echo("Error during loading tweet from database");
+        }
 	echo("<strong>Tweet #".$tweet->getId()."</strong><br>");
         echo("Written by: <strong><a href='User_page.php?userId={$tweet->getUserId()}'>".$tweet->getAuthor($conn)."</strong></a><br>");
         echo("<br>".$tweet->getText()."<br>");
         echo("<br>Comments:<br>");
-        $comments=$tweet->loadAllComments($conn);
+        $comments=Comment::LoadAllTweetComments($conn, $tweet->getId());
                 if($comments===false){
                     echo ("No comments yet");
                 }

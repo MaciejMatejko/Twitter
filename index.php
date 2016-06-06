@@ -10,7 +10,9 @@ if(!isset($_SESSION['loggedUserId'])){
 }
 else{
     $loggedUser = new User();
-    $loggedUser->loadFromDB($conn, $_SESSION['loggedUserId']);
+    if(!$loggedUser->loadFromDB($conn, $_SESSION['loggedUserId'])){
+        echo("Error during loading user from database");
+    }
 }
 
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(trim($_POST['newTweet'])) >0 && strlen(trim($_POST['newTweet'])) <=140){
@@ -51,7 +53,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(tr
             User Tweets:
             <ul>
                 <?php
-                $userTweets=$loggedUser->loadAllTweets($conn);
+                $userTweets=Tweet::LoadAllUserTweets($conn, $loggedUser->getId());
                 if($userTweets===false){
                     echo "You haven't tweeted yet.";
                 }

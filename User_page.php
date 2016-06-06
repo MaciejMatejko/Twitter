@@ -21,7 +21,7 @@ if($userId) {
             echo("Go to <a href='Messages.php'>messages</a><br>");
         }
         echo("<br>{$user->getFullName()}'s tweets:<br>");
-        $userTweets=$user->loadAllTweets($conn);
+        $userTweets=Tweet::LoadAllUserTweets($conn, $user->getId());
                 if($userTweets===false){
                     echo "Not tweeted yet.";
                 }
@@ -153,8 +153,6 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newMessage']) && strlen(
     $messageToSend->setText($_POST['newMessage']);
     $messageToSend->setRead(1);
     $messageToSend->setCreationDate($date);
-    var_dump($messageToSend);
-    var_dump($messageToSend->create($conn));
     if($messageToSend->create($conn)){
         echo ("<meta http-equiv='refresh' content='0'>");
     }

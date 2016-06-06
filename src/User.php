@@ -23,17 +23,10 @@ class User {
             if(password_verify($password, $rowUser['password']) && $rowUser['active']==1){
                 return $rowUser['id'];
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
-        
+        return false;
     }
-    
-    
+        
     private $id;
     private $email;
     private $password;
@@ -128,25 +121,8 @@ class User {
             $this->active=$rowUser['active'];
         }
         else{
-            return null;
+            return false;
         }
-    }
-    
-    public function loadAllTweets(mysqli $conn) {
-        $sql="SELECT * FROM Tweet WHERE user_id = {$this->id}";
-        $userTweets=[];
-        $result=$conn->query($sql);
-        if($result->num_rows>0){
-            while($row=$result->fetch_assoc()){
-                $tweet= new Tweet();
-                $tweet->id = $row['id'];
-                $tweet->setUserId($row['user_id']);
-                $tweet->setText($row['text']);
-                $userTweets[]=$tweet;
-            }
-            return $userTweets;
-        }
-        return false;
     }
     
     public function showUser() {
@@ -168,46 +144,5 @@ class User {
         $result= $conn->query($sql);
         return intval($result->fetch_row()[0]);
     }
-    
-    public function loadAllSentMessages(mysqli $conn){
-        $sql="SELECT * FROM Message WHERE sender_id={$this->id}";
-        $sendMessages = [];
-        $result = $conn->query($sql);
-        if($result->num_rows>0){
-            while($row=$result->fetch_assoc()){
-                $message=new Message();
-                $message->id =$row['id'];
-                $message->setSenderId($row['sender_id']);
-                $message->setRecipientId($row['recipient_id']);
-                $message->setText($row['text']);
-                $message->setRead($row['read']);
-                $message->setCreationDate($row['creation_date']);
-                $sentMessages[]=$message;
-            }
-            return $sentMessages;
-        }
-        return false;
-    }
-    
-    public function loadAllReceivedMessages(mysqli $conn){
-        $sql="SELECT * FROM Message WHERE recipient_id={$this->id}";
-        $receivedMessages = [];
-        $result = $conn->query($sql);
-        if($result->num_rows>0){
-            while($row=$result->fetch_assoc()){
-                $message=new Message();
-                $message->id =$row['id'];
-                $message->setSenderId($row['sender_id']);
-                $message->setRecipientId($row['recipient_id']);
-                $message->setText($row['text']);
-                $message->setRead($row['read']);
-                $message->setCreationDate($row['creation_date']);
-                $receivedMessages[]=$message;
-            }
-            return $receivedMessages;
-        }
-        return false;
-    }
-    
 }
 

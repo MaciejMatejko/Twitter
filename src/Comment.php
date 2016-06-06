@@ -2,7 +2,27 @@
 
 class Comment {
     
-    public $id;
+    public static function LoadAllTweetComments(mysqli $conn, $tweetId){
+        $sql="SELECT * FROM Comment WHERE tweet_id={$tweetId} ORDER BY creation_date DESC";
+        $tweetComments = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $comment=new Comment();
+                $comment->id =$row['id'];
+                $comment->setTweetId($row['tweet_id']);
+                $comment->setUserId($row['user_id']);
+                $comment->setText($row['text']);
+                $comment->setCreationDate($row['creation_date']);
+                $tweetComments[]=$comment;
+            }
+            return $tweetComments;
+        }
+        return false;
+    }
+
+
+    private $id;
     private $tweet_id;
     private $user_id;
     private $text;
@@ -60,13 +80,13 @@ class Comment {
         if($result->num_rows==1){
             $row=$result->fetch_assoc();
             $this->id = $row['id'];
-            $this->tweet_id=$row['tweet_id'];
-            $this->user_id=$row['user_id'];
-            $this->text=$row['text'];
-            $this->creation_date=$row['creation_date'];
+            $this->setTweetId($row['tweet_id']);
+            $this->setUserId($row['user_id']);
+            $this->setText($row['text']);
+            $this->setCreationDate($row['creation_date']);
         }
         else{
-            return null;
+            return false;
         }
     }
     
@@ -77,16 +97,11 @@ class Comment {
                 $this->id=$conn->insert_id;
                 return true;
             }
-            else{
-                return false;
-            } 
         }
-        else{
-            return false;
-        }
+        return false; 
     }
     
-    public function Update(mysqli $conn){
+    public function update(mysqli $conn){
         if($this->id!==-1){
             $sql="UPDATE Tweet SET 
                   user_id='{$this->user_id}'
@@ -95,13 +110,8 @@ class Comment {
             if($conn->query($sql)){
                 return true;
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
     
     public function getAuthor(mysqli $conn){

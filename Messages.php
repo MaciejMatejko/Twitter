@@ -10,11 +10,13 @@ if(!isset($_SESSION['loggedUserId'])){
     header("Location: index.php");
 }else{
     $loggedUser = new User();
-    $loggedUser->loadFromDB($conn, $_SESSION['loggedUserId']);
+    if(!$loggedUser->loadFromDB($conn, $_SESSION['loggedUserId'])){
+        echo("Error during loading user from database");
+    }
 }
 
 echo("<h2>Recived messages:</h2>");
-$recivedMessages=$loggedUser->loadAllReceivedMessages($conn);
+$recivedMessages=Message::LoadAllRecivedMessagesOfUser($conn, $loggedUser->getId());
 if($recivedMessages===false){
     echo("<br>No messages");
 }else{
@@ -24,7 +26,7 @@ if($recivedMessages===false){
 }
 
 echo("<br><h2>Send messages:</h2>");
-$sentMessages=$loggedUser->loadAllSentMessages($conn);
+$sentMessages=Message::LoadAllSendMessagesOfUser($conn, $loggedUser->getId());
 if($sentMessages===false){
     echo("<br>No messages");
 }else{

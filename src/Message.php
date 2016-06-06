@@ -2,7 +2,7 @@
 
 class Message{
     
-    public static function userValidation($userId, $messageId, mysqli $conn){
+    public static function UserValidation($userId, $messageId, mysqli $conn){
         $message= new Message();
         $message->loadMessageFromDB($conn, $messageId);
         if($message->getRecipientId() == $userId || $message->getSenderId() == $userId){
@@ -13,7 +13,47 @@ class Message{
         }
     }
     
-    public $id;
+    public static function LoadAllSendMessagesOfUser(mysqli $conn, $userId){
+        $sql="SELECT * FROM Message WHERE sender_id={$userId}";
+        $sendMessages = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $message=new Message();
+                $message->id =$row['id'];
+                $message->setSenderId($row['sender_id']);
+                $message->setRecipientId($row['recipient_id']);
+                $message->setText($row['text']);
+                $message->setRead($row['read']);
+                $message->setCreationDate($row['creation_date']);
+                $sentMessages[]=$message;
+            }
+            return $sentMessages;
+        }
+        return false;
+    }
+    
+    public static function LoadAllRecivedMessagesOfUser(mysqli $conn, $userId){
+        $sql="SELECT * FROM Message WHERE recipient_id={$userId}";
+        $receivedMessages = [];
+        $result = $conn->query($sql);
+        if($result->num_rows>0){
+            while($row=$result->fetch_assoc()){
+                $message=new Message();
+                $message->id =$row['id'];
+                $message->setSenderId($row['sender_id']);
+                $message->setRecipientId($row['recipient_id']);
+                $message->setText($row['text']);
+                $message->setRead($row['read']);
+                $message->setCreationDate($row['creation_date']);
+                $receivedMessages[]=$message;
+            }
+            return $receivedMessages;
+        }
+        return false;
+    }
+    
+    private $id;
     private $sender_id;
     private $recipient_id;
     private $text;
@@ -103,28 +143,18 @@ class Message{
                 $this->id=$conn->insert_id;
                 return true;
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
     
-    public function Update(mysqli $conn){
+    public function update(mysqli $conn){
         if($this->id!==-1){
             $sql="UPDATE Message SET sender_id={$this->sender_id}, recipient_id={$this->recipient_id}, text = '{$this->text}', `read` = {$this->read}, creation_date = '{$this->creation_date}' WHERE id = {$this->id}";
             if($conn->query($sql)){
                 return true;
             }
-            else{
-                return false;
-            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
     
     public function loadMessageFromDB(mysqli $conn, $id){
@@ -140,7 +170,7 @@ class Message{
             $this->creation_date=$row['creation_date'];
         }
         else{
-            return null;
+            return false;
         }
     }
     

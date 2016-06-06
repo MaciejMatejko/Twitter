@@ -10,26 +10,28 @@ require_once 'src/Message.php';
 if(!isset($_SESSION['loggedUserId'])){
     header("Location: index.php");
 }else{
-    $loggedUserId=$_SESSION['loggedUserId'];
+    if(!$loggedUserId=$_SESSION['loggedUserId']){
+        echo("Error during loading user from database");
+    }
 }
 
 if($_SERVER['REQUEST_METHOD']==="GET" && isset($_GET['messageId'])){
     $messageId = $_GET['messageId'];
-    if(Message::userValidation($loggedUserId, $messageId, $conn)){
+    if(Message::UserValidation($loggedUserId, $messageId, $conn)){
         $message = new Message();
         $message->loadMessageFromDB($conn, $messageId);
         $message->showMessage($conn);
         if($loggedUserId == $message->getRecipientId()){
             $message->setRead(0);
         }
-        $message->Update($conn);
+        $message->update($conn);
     }
     else{
-        echo("Error during loading message1");
+        echo("Error during loading message");
     }
 }
 else{
-    echo("Error during loading message2");
+    echo("Error during loading message");
 }
 
 
