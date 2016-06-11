@@ -123,6 +123,6 @@ class Comment {
     }
     
     public function showComment(mysqli $conn){
-        echo ($this->creation_date. " written by <a href=User_page.php?userId={$this->user_id}>" . $this->getAuthor($conn) . '</a>:<br> '.$this->text);
+        echo ($this->creation_date. " written by <a href=user_page.php?userId={$this->user_id}>" . $this->getAuthor($conn) . '</a>:<br> '.$this->text);
     }
 }

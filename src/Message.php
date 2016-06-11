@@ -177,17 +177,17 @@ class Message{
     
     public function showMessagePreviev(mysqli $conn){
         if($this->isRead()){
-            echo("<br>{$this->creation_date} - Send by <a href='User_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='User_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
-            echo(substr($this->getText(), 0, 30)."(...)<br><a href='Msg_page.php?messageId={$this->getId()}'>See more</a><br>");
+            echo("<br>{$this->creation_date} - Send by <a href='user_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='user_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
+            echo(substr($this->getText(), 0, 30)."(...)<br><a href='msg_page.php?messageId={$this->getId()}'>See more</a><br>");
         }
         else{
-            echo("<br><strong>UNREAD</strong> {$this->creation_date} - Send by <a href='User_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='User_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
-            echo(substr($this->getText(), 0, 30)."(...)<br><a href='Msg_page.php?messageId={$this->getId()}'>See more</a><br>");
+            echo("<br><strong>UNREAD</strong> {$this->creation_date} - Send by <a href='user_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='user_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
+            echo(substr($this->getText(), 0, 30)."(...)<br><a href='msg_page.php?messageId={$this->getId()}'>See more</a><br>");
         }
     }
     
     public function showMessage(mysqli $conn){
-        echo("<br>{$this->creation_date} - Send by <a href='User_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='User_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
+        echo("<br>{$this->creation_date} - Send by <a href='user_page.php?userId={$this->sender_id}'>{$this->getAuthor($conn)}</a> to <a href='user_page.php?userId={$this->recipient_id}'>{$this->getRecipient($conn)}</a><br>");
         echo($this->getText()."<br>");
     }
     

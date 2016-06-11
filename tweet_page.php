@@ -18,7 +18,7 @@ if($tweetId) {
             echo("Error during loading tweet from database");
         }
 	echo("<strong>Tweet #".$tweet->getId()."</strong><br>");
-        echo("Written by: <strong><a href='User_page.php?userId={$tweet->getUserId()}'>".$tweet->getAuthor($conn)."</strong></a><br>");
+        echo("Written by: <strong><a href='user_page.php?userId={$tweet->getUserId()}'>".$tweet->getAuthor($conn)."</strong></a><br>");
         echo("<br>".$tweet->getText()."<br>");
         echo("<br>Comments:<br>");
         $comments=Comment::LoadAllTweetComments($conn, $tweet->getId());

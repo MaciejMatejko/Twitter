@@ -105,7 +105,7 @@ class Tweet {
     }
     
     public function showTweet(mysqli $conn){
-        echo "Tweet #<a href='Tweet_page.php?tweetId={$this->id}'>".$this->id. "</a> written by <a href='User_page.php?userId={$this->user_id}'>" . $this->getAuthor($conn) . "</a>: ".$this->text;
+        echo "Tweet #<a href='tweet_page.php?tweetId={$this->id}'>".$this->id. "</a> written by <a href='user_page.php?userId={$this->user_id}'>" . $this->getAuthor($conn) . "</a>: ".$this->text;
     }
     
 }

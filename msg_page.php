@@ -35,7 +35,7 @@ else{
 }
 
 
-echo("<br><a href='Messages.php'>Go back to messages</a>");
+echo("<br><a href='messages.php'>Go back to messages</a>");
 
 $conn->close();
 $conn=null;

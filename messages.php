@@ -35,7 +35,7 @@ if($sentMessages===false){
     }
 }
 
-echo("<br><a href='User_page.php?userId={$_SESSION['loggedUserId']}'>Back to your profile</a>");
+echo("<br><a href='user_page.php?userId={$_SESSION['loggedUserId']}'>Back to your profile</a>");
 
 $conn->close();
 $conn=null;

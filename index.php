@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(tr
             $loggedUser->showUser();
             ?>
             <br>
-            <a href="User_page.php?userId=<?php echo($loggedUser->getId()); ?>">Show your profile</a>
+            <a href="user_page.php?userId=<?php echo($loggedUser->getId()); ?>">Show your profile</a>
         </div>
         <br>
         <div>
@@ -62,10 +62,10 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newTweet']) && strlen(tr
                         echo"<li>";
                         $value->showTweet($conn);
                         if($value->countComments($conn)===1){
-                            echo(" - 1 <a href='Tweet_page.php?tweetId={$value->getId()}'>comment</a>");
+                            echo(" - 1 <a href='tweet_page.php?tweetId={$value->getId()}'>comment</a>");
                         }
                         elseif($value->countComments($conn)>1){
-                            echo(" - ".$value->countComments($conn)." <a href='Tweet_page.php?tweetId={$value->getId()}'>comments</a>");
+                            echo(" - ".$value->countComments($conn)." <a href='tweet_page.php?tweetId={$value->getId()}'>comments</a>");
                         }
                         else{
                             echo(" - 0 comments");

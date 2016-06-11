@@ -18,7 +18,7 @@ if($userId) {
         echo("User email: <strong>".$user->getEmail()."</strong><br>");
         if(isset($_SESSION['loggedUserId']) && $userId===$_SESSION['loggedUserId']){
             echo("You have ".$user->countUnreadMessages($conn)." unread messages<br>");
-            echo("Go to <a href='Messages.php'>messages</a><br>");
+            echo("Go to <a href='messages.php'>messages</a><br>");
         }
         echo("<br>{$user->getFullName()}'s tweets:<br>");
         $userTweets=Tweet::LoadAllUserTweets($conn, $user->getId());
@@ -30,10 +30,10 @@ if($userId) {
                         echo"<li>";
                         $value->showTweet($conn);
                         if($value->countComments($conn)===1){
-                            echo(" - 1 <a href='Tweet_page.php?tweetId={$value->getId()}'>comment</a>");
+                            echo(" - 1 <a href='tweet_page.php?tweetId={$value->getId()}'>comment</a>");
                         }
                         elseif($value->countComments($conn)>1){
-                            echo(" - ".$value->countComments($conn)." <a href='Tweet_page.php?tweetId={$value->getId()}'>comments</a>");
+                            echo(" - ".$value->countComments($conn)." <a href='tweet_page.php?tweetId={$value->getId()}'>comments</a>");
                         }
                         else{
                             echo(" - 0 comments");
