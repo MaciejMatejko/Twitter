@@ -84,6 +84,7 @@ class Comment {
             $this->setUserId($row['user_id']);
             $this->setText($row['text']);
             $this->setCreationDate($row['creation_date']);
+            return true;
         }
         else{
             return false;

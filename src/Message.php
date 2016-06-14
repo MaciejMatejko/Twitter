@@ -168,6 +168,7 @@ class Message{
             $this->text=$row['text'];
             $this->read=$row['read'];
             $this->creation_date=$row['creation_date'];
+            return true;
         }
         else{
             return false;

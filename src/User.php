@@ -3,17 +3,26 @@
 class User {
     
     public static function getUserByEmail(mysqli $conn, $email){
-        $sql="SELECT * FROM User WHERE  email='$email'";
+        $sql="SELECT * FROM User WHERE email='$email'";
         $result=$conn->query($sql);
         if($result->num_rows ==1){
             return $result->fetch_assoc();
-            
         }
         else{
             return false;
         }
     }
     
+    
+//    public static function login(mysqli $conn, $email, $password){
+//        
+//        if($row=User::getUserByEmail($conn, $email)){
+//            if(password_verify($password, $row['password']) && $row['active']==1){
+//                return $row['id'];
+//            }
+//        }
+//        return false;
+//    }
     
     public static function login(mysqli $conn, $email, $password){
         $sql="SELECT * FROM User WHERE email='{$email}'";
@@ -119,6 +128,7 @@ class User {
             $this->password=$rowUser['password'];
             $this->fullName=$rowUser['fullName'];
             $this->active=$rowUser['active'];
+            return true;
         }
         else{
             return false;

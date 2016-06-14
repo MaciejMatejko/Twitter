@@ -92,6 +92,7 @@ class Tweet {
             $this->id = $rowUser['id'];
             $this->setUserId($rowUser['user_id']);
             $this->setText($rowUser['text']);
+            return true;
         }
         else{
             return false;
